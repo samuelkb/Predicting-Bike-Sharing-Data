@@ -91,26 +91,20 @@ class NeuralNetwork(object):
         error = y - final_outputs
 
         # Backpropagated error term from output
-        output_error_term = error * final_outputs * (1 - final_outputs)
+        output_error_term = error
 
         # Hidden layer's contribution to the error
-        hidden_error = np.dot(output_error_term, delta_weights_h_o.T)
-        print("Shape of output_error_term: {}".format(output_error_term.shape))
-        print("Shape of delta_weights_h_o: {}".format(delta_weights_h_o.shape))
+        hidden_error = np.dot(
+            output_error_term, self.weights_hidden_to_output.T)
 
         # Backpropagated error term from hidden layer
         hidden_error_term = hidden_error * \
             hidden_outputs * (1 - hidden_outputs)
 
         # Weight step (input to hidden)
-        print("Shape of hidden_error_term: {}".format(hidden_error_term.shape))
-        print("Shape of delta_weights_i_h: {}".format(delta_weights_i_h.shape))
-        print("Shape of X: {}".format(X.shape))
         delta_weights_i_h += hidden_error_term * X[:, None]
 
         # Weight step (hidden to output)
-        print("Shape of delta_weights_h_o: {}".format(delta_weights_h_o.shape))
-        print("Shape of hidden_outputs: {}".format(hidden_outputs.shape))
         delta_weights_h_o += output_error_term * hidden_outputs[:, None]
 
         return delta_weights_i_h, delta_weights_h_o
